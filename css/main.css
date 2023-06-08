@@ -8,18 +8,21 @@
 :root {
     --text: #2a2728;
     --textaccent: #808080;
+    --gray: #cccccc;
     --accent: #343032;
     --yellow: #ffdb58;
     --red: #AF87CE;
     --bg: #f7f7f7;
     --white: #fff;
 }
+
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Regular', serif;
-    font-size: 18pt;
+    line-height: 1.5rem;
+    font-size: 16pt;
   }
 
 body {
@@ -31,6 +34,22 @@ body {
   min-height: 100%;
 }
 
+p, h1, h2, h3, h4, h5, h6 {
+    margin: 10px 0;
+}
+
+h1 {
+    font-size: 2rem;
+    margin: 20px 0;
+}
+
+h2 {
+    font-size: 1.7rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+}
 
 span {
     color: var(--yellow);
@@ -243,6 +262,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: space-around;
+    box-shadow: 5px 5px 5px var(--gray);
 }
 
 .nav i {
@@ -255,5 +275,10 @@ img {
     background-color: var(--white);
     border-radius: 35px;
     margin: 10px auto;
-    padding: 20px 10px;
+    padding: 30px 15px;
+    box-shadow: 5px 5px 5px var(--gray);
+}
+
+#post a {
+    color: var(--yellow);
 }
