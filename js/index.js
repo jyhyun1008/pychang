@@ -142,7 +142,7 @@ if (!page) {
     fetch(url)
     .then(res => res.text())
     .then((out) => {
-        document.querySelector(".page_title").innerText = '업데이트'
+        document.querySelector(".page_title").innerText = 'MAIN'
         document.querySelector("#post").innerHTML += parseMd(out)
     })
     .catch(err => { throw err });
