@@ -213,7 +213,7 @@ img {
 }
 
 .youtube {
-	width: 49.5%;
+	width: 100%;
 	aspect-ratio: 16 / 9;
 	border-radius: 15px;
 	overflow: hidden;
@@ -222,14 +222,6 @@ img {
 
 @media (max-width: 768px) {
     .gallery {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        border-radius: 15px;
-        overflow: hidden;
-        margin-bottom: 10px;
-    }
-    
-    .youtube {
         width: 100%;
         aspect-ratio: 16 / 9;
         border-radius: 15px;
