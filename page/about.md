@@ -5,6 +5,16 @@
 
 라는 모토로 만들어지고 있는, Pix2Pix와 STFT 방법을 통해 노랫소리를 합성하는 AI 음성 합성 엔진입니다. 현재는 딱히 유저 인터페이스는 없고, 오로지 하드 코딩을 통해서만 음성 합성이 가능합니다.
 
+# 데모
+
+* Dataset 27, Epoch 3K
+
+<iframe class="youtube" width="560" height="315" src="https://www.youtube.com/embed/e0Ywt4mYRXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+* Dataset 27, Epoch 36K
+
+<iframe class="youtube" width="560" height="315" src="https://www.youtube.com/embed/yxm8It_96dk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 # Pix2Pix
 
 다음과 같은 AI 이미지를 보신 적 있으셨을 거예요.
