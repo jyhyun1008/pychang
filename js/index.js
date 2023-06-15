@@ -163,6 +163,7 @@ if (!page && !model) {
     document.querySelector("#piano-roll").innerHTML = '<canvas id="pianoroll"></canvas>';
 
     var canvas = document.getElementById('pianoroll');
+    const note = ['G2', 'G#2', 'A2', 'A#2', 'B2', 'C3', 'C#3', 'D2', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3', 'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', '-']
 
     resizeCanvasToDisplaySize(canvas); 
 
@@ -220,7 +221,7 @@ if (!page && !model) {
             if (x == 0) {
                 ctx.fillStyle = "rgb(40,40,40)";
                 ctx.font = "16px serif";
-                ctx.fillText(26 - parseInt(y/cellheight), 10, y - 5);
+                ctx.fillText(note[28 - parseInt(y/cellheight)], 10, y - 5);
             }
         }
         ctx.beginPath();
