@@ -224,7 +224,7 @@ if (!page && !model) {
             }
         }
         ctx.beginPath();
-        if((y/cellheight) % 12 == 0 || (y/cellheight) % 12 == 1 || (y/cellheight) % 12 == 3 || (y/cellheight) % 12 == 5 || (y/cellheight) % 12 == 7 || (y/cellheight) % 12 == 8 || (y/cellheight) % 12 == 10 ){
+        if((y/cellheight) % 12 == 10 || (y/cellheight) % 12 == 11 || (y/cellheight) % 12 == 1 || (y/cellheight) % 12 == 3 || (y/cellheight) % 12 == 5 || (y/cellheight) % 12 == 6 || (y/cellheight) % 12 == 8 ){
             ctx.fillStyle = "rgb(225,225,225)";
         }else{
             ctx.fillStyle = "rgb(255,219,88)";
