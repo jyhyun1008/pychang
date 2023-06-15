@@ -7,13 +7,17 @@
 
 # 데모
 
-* Dataset 27, Epoch 3K
+* Dataset 27, Steps 3K
 
 <iframe class="youtube" width="560" height="315" src="https://www.youtube.com/embed/e0Ywt4mYRXU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-* Dataset 27, Epoch 36K
+* Dataset 27, Steps 36K
 
 <iframe class="youtube" width="560" height="315" src="https://www.youtube.com/embed/yxm8It_96dk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+* Dataset 65, Steps 12K
+
+<iframe class="youtube" width="560" height="315" src="https://www.youtube.com/embed/cHCqBWZOqco" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 # Pix2Pix
 
