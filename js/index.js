@@ -205,7 +205,6 @@ if (!page && !model) {
             ctx.stroke();
     }
 
-
     function drawPianoGrid(){
     for(y=0;y<w;y=y+cellheight){
         for(x=0;x<w;x=x+cellwidth){
@@ -218,7 +217,7 @@ if (!page && !model) {
             ctx.stroke();
         }
         ctx.beginPath();
-        if(y % 8){
+        if(y % 12 == 0 || y % 12 == 2 || y % 12 == 4 || y % 12 == 5 || y % 12 == 7 || y % 12 == 9 || y % 12 == 11 ){
             ctx.fillStyle = "rgb(32,32,32)";
         }else{
             ctx.fillStyle = "rgb(40,40,40)";
