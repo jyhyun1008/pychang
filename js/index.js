@@ -194,7 +194,7 @@ if (!page && !model) {
     ctx.lineTo(x, y+cellheight)
     ctx.stroke();
     ctx.font = "16px serif";
-    ctx.fillText(p, x + 10, y + cellheight);
+    ctx.fillText(p, x + 10, y + cellheight - 10);
     }
 
     function drawPlayHead(x){
