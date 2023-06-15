@@ -176,7 +176,7 @@ if (!page && !model) {
 
     drawNote(2,4,4);
     drawNote(4,8,4);
-    drawNote(7,12,1, true);
+    drawNote(7,12,1, 'la', true);
 
     drawPlayHead(357);
 
