@@ -275,7 +275,7 @@ img {
     color: var(--yellow);
 }
 
-.pianoroll {
+#pianoroll {
   height:588px;
   width:800px
 }
