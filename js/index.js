@@ -157,7 +157,7 @@ if (!page && !model) {
     .catch(err => { throw err });
     
 } else if (model) {
-    const mymodel = tf.loadLayersModel('./models/'+model+'model.json');
+    const mymodel = tf.loadLayersModel('/models/'+model+'.json');
     document.querySelector(".piano-roll").innerHTML = '<canvas id="pianoroll"></canvas>';
 
     var canvas = document.getElementById('pianoroll');
