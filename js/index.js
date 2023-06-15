@@ -220,7 +220,7 @@ if (!page && !model) {
             ctx.stroke();
         }
         ctx.beginPath();
-        if(y % 12 == 0 || y % 12 == 2 || y % 12 == 4 || y % 12 == 5 || y % 12 == 7 || y % 12 == 9 || y % 12 == 11 ){
+        if((y/cellheight) % 12 == 0 || (y/cellheight) % 12 == 2 || (y/cellheight) % 12 == 4 || (y/cellheight) % 12 == 5 || (y/cellheight) % 12 == 7 || (y/cellheight) % 12 == 9 || (y/cellheight) % 12 == 11 ){
             ctx.fillStyle = "rgb(32,32,32)";
         }else{
             ctx.fillStyle = "rgb(40,40,40)";
