@@ -186,7 +186,7 @@ if (!page && !model) {
     ctx.beginPath();
     ctx.fillStyle = "rgb(40,40,40)";
     if(selected){
-        ctx.strokeStyle = "rgb(254, 254, 254)";
+        ctx.strokeStyle = "rgb(75, 139, 59)";
     }else{
         ctx.strokeStyle = "rgb(40,40,40)";
     }
@@ -194,7 +194,7 @@ if (!page && !model) {
     ctx.lineTo(x, y+cellheight)
     ctx.stroke();
     ctx.font = "16px serif";
-    ctx.fillText(p, x + 10, y + cellheight - 10);
+    ctx.fillText(p, x + 10, y + cellheight - 5);
     }
 
     function drawPlayHead(x){
