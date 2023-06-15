@@ -221,7 +221,7 @@ if (!page && !model) {
             if (x == 0) {
                 ctx.fillStyle = "rgb(40,40,40)";
                 ctx.font = "16px serif";
-                ctx.fillText(parseInt(y/cellheight), 10, y);
+                ctx.fillText(26 - parseInt(y/cellheight), 10, y);
             }
         }
         ctx.beginPath();
