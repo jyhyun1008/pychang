@@ -180,9 +180,9 @@ if (!page && !model) {
 
     drawPlayHead(357);
 
-    function drawNote(x,y,length, selected=false){
+    function drawNote(x,y,length, p='a', selected=false){
     x=x*cellwidth;
-    y=y*cellheight;
+    y=h - y*cellheight;
     ctx.beginPath();
     ctx.fillStyle = "rgb(128,128,128)";
     if(selected){
@@ -193,6 +193,9 @@ if (!page && !model) {
     ctx.rect(x, y, cellwidth*length, cellheight);
     ctx.fill()
     ctx.stroke();
+
+    ctx.font = "16px serif";
+    ctx.fillText(p, x, y);
     }
 
     function drawPlayHead(x){
