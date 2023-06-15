@@ -190,12 +190,11 @@ if (!page && !model) {
     }else{
         ctx.strokeStyle = "rgb(40,40,40)";
     }
-    ctx.rect(x, y, cellwidth*length, cellheight);
-    ctx.fill()
-    ctx.stroke();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y+cellheight)
 
     ctx.font = "16px serif";
-    ctx.fillText(p, x, y);
+    ctx.fillText(p, x + 10, y + cellheight);
     }
 
     function drawPlayHead(x){
