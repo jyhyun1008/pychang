@@ -219,12 +219,13 @@ if (!page && !model) {
             ctx.shadowBlur=0;
             ctx.stroke();
             if (x == 0) {
+                ctx.fillStyle = "rgb(40,40,40)";
                 ctx.font = "16px serif";
-                ctx.fillText(parseInt(y/cellheight), x, y);
+                ctx.fillText(parseInt(y/cellheight), 10, y);
             }
         }
         ctx.beginPath();
-        if((y/cellheight) % 12 == 11 || (y/cellheight) % 12 == 1 || (y/cellheight) % 12 == 3 || (y/cellheight) % 12 == 5 || (y/cellheight) % 12 == 7 || (y/cellheight) % 12 == 8 || (y/cellheight) % 12 == 10 ){
+        if((y/cellheight) % 12 == 0 || (y/cellheight) % 12 == 1 || (y/cellheight) % 12 == 3 || (y/cellheight) % 12 == 5 || (y/cellheight) % 12 == 7 || (y/cellheight) % 12 == 8 || (y/cellheight) % 12 == 10 ){
             ctx.fillStyle = "rgb(225,225,225)";
         }else{
             ctx.fillStyle = "rgb(255,219,88)";
