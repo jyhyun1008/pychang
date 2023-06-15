@@ -182,11 +182,11 @@ if (!page && !model) {
 
     function drawNote(x,y,length, p='a', selected=false){
     x=x*cellwidth;
-    y=h - y*cellheight;
+    y= h - y*cellheight - cellheight;
     ctx.beginPath();
     ctx.fillStyle = "rgb(40,40,40)";
     if(selected){
-        ctx.strokeStyle = "rgb(255,255,255)";
+        ctx.strokeStyle = "rgb(254, 254, 254)";
     }else{
         ctx.strokeStyle = "rgb(40,40,40)";
     }
@@ -202,7 +202,7 @@ if (!page && !model) {
     ctx.beginPath();    
             ctx.moveTo(x,0);
             ctx.lineWidth = 2;      
-            ctx.strokeStyle = "red";
+            ctx.strokeStyle = "black";
             ctx.lineTo(x,h);
             ctx.shadowBlur=0;
             ctx.stroke();
@@ -214,18 +214,18 @@ if (!page && !model) {
         if(x % 8 ==0){
             ctx.beginPath();    
             ctx.moveTo(x,0);
-            ctx.strokeStyle = "white";
+            ctx.strokeStyle = "rgb(254, 254, 254)";
             ctx.lineTo(x,h);
             ctx.shadowBlur=0;
             ctx.stroke();
         }
         ctx.beginPath();
-        if((y/cellheight) % 12 == 0 || (y/cellheight) % 12 == 2 || (y/cellheight) % 12 == 4 || (y/cellheight) % 12 == 5 || (y/cellheight) % 12 == 7 || (y/cellheight) % 12 == 9 || (y/cellheight) % 12 == 11 ){
+        if((y/cellheight) % 12 == 1 || (y/cellheight) % 12 == 3 || (y/cellheight) % 12 == 5 || (y/cellheight) % 12 == 7 || (y/cellheight) % 12 == 8 || (y/cellheight) % 12 == 10 || (y/cellheight) % 12 == 0 ){
             ctx.fillStyle = "rgb(225,225,225)";
         }else{
             ctx.fillStyle = "rgb(255,219,88)";
         }
-        ctx.strokeStyle = "rgb(210,210,210)";
+        ctx.strokeStyle = "rgb(255,255,255)";
         ctx.rect(x, y, cellwidth, cellheight);
         ctx.fill()
         ctx.stroke();
