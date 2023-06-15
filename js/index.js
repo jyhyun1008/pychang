@@ -184,11 +184,11 @@ if (!page && !model) {
     x=x*cellwidth;
     y=h - y*cellheight;
     ctx.beginPath();
-    ctx.fillStyle = "rgb(128,128,128)";
+    ctx.fillStyle = "rgb(255,219,88)";
     if(selected){
         ctx.strokeStyle = "rgb(255,255,255)";
     }else{
-        ctx.strokeStyle = "rgb(24,24,24)";
+        ctx.strokeStyle = "rgb(255,219,88)";
     }
     ctx.rect(x, y, cellwidth*length, cellheight);
     ctx.fill()
@@ -214,14 +214,14 @@ if (!page && !model) {
         if(x % 8 ==0){
             ctx.beginPath();    
             ctx.moveTo(x,0);
-            ctx.strokeStyle = "black";
+            ctx.strokeStyle = "white";
             ctx.lineTo(x,h);
             ctx.shadowBlur=0;
             ctx.stroke();
         }
         ctx.beginPath();
         if((y/cellheight) % 12 == 0 || (y/cellheight) % 12 == 2 || (y/cellheight) % 12 == 4 || (y/cellheight) % 12 == 5 || (y/cellheight) % 12 == 7 || (y/cellheight) % 12 == 9 || (y/cellheight) % 12 == 11 ){
-            ctx.fillStyle = "rgb(32,32,32)";
+            ctx.fillStyle = "rgb(210,210,210)";
         }else{
             ctx.fillStyle = "rgb(40,40,40)";
         }
