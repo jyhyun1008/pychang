@@ -192,7 +192,7 @@ if (!page && !model) {
     }
     ctx.moveTo(x, y);
     ctx.lineTo(x, y+cellheight)
-
+    ctx.stroke();
     ctx.font = "16px serif";
     ctx.fillText(p, x + 10, y + cellheight);
     }
