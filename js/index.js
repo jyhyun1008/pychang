@@ -157,7 +157,9 @@ if (!page && !model) {
     .catch(err => { throw err });
     
 } else if (model) {
-    const mymodel = tf.loadLayersModel('/models/'+model+'/model.json');
+    async function importModel (model) {
+        const mymodel = await tf.loadLayersModel('/models/'+model+'/model.json');
+    }
     document.querySelector("#piano-roll").innerHTML = '<canvas id="pianoroll"></canvas>';
 
     var canvas = document.getElementById('pianoroll');
@@ -228,12 +230,6 @@ if (!page && !model) {
         }
     }
     }
-
-
-
-
-
-
 
     function resizeCanvasToDisplaySize(canvas) {
     // look up the size the canvas is being displayed
