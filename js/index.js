@@ -174,13 +174,13 @@ if (!page && !model) {
 
     drawPianoGrid();
 
-    drawNote(2,4,4);
-    drawNote(4,8,4);
-    drawNote(7,12,1, 'la', true);
+    drawNote(2,4);
+    drawNote(4,8);
+    drawNote(7,12, 'la', true);
 
-    drawPlayHead(357);
+   // drawPlayHead(357);
 
-    function drawNote(x,y,length, p='a', selected=false){
+    function drawNote(x,y, p='a', selected=false){
     x=x*cellwidth;
     y= h - y*cellheight - cellheight;
     ctx.beginPath();
@@ -220,7 +220,7 @@ if (!page && !model) {
             if (x == 0) {
                 ctx.fillStyle = "rgb(40,40,40)";
                 ctx.font = "16px serif";
-                ctx.fillText(26 - parseInt(y/cellheight), 10, y);
+                ctx.fillText(26 - parseInt(y/cellheight), 10, y - 5);
             }
         }
         ctx.beginPath();
