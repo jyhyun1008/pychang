@@ -274,3 +274,8 @@ img {
 #post a {
     color: var(--yellow);
 }
+
+.pianoroll {
+  height:588px;
+  width:800px
+}
