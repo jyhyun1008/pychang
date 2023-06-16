@@ -400,9 +400,11 @@ if (!page && !model) {
             ctx.lineTo(x+60,h);
             ctx.shadowBlur=0;
             ctx.stroke();
-            ctx.fillStyle = "rgb(40,40,40)";
-            ctx.font = "16px serif";
-            ctx.fillText(x/cellwidth/16 + 1, x+70, 15);
+            if(y == cellheight){
+                ctx.fillStyle = "rgb(40,40,40)";
+                ctx.font = "16px serif";
+                ctx.fillText(x/cellwidth/16 + 1, x+70, 15);
+            }
         } else if ((x/cellwidth) % 4 ==0){
             ctx.beginPath();    
             ctx.moveTo(x+60,0);
