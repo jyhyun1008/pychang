@@ -238,8 +238,9 @@ if (!page && !model) {
     }
 
     canvas.onclick = function(event){
-        const x = parseInt((event.clientX - ctx.canvas.offsetLeft - 60)/cellwidth); 
-        const y = parseInt((h - (event.clientY - ctx.canvas.offsetTop))/cellheight);
+        var BCR = canvas.getBoundingClientRect();
+        const x = parseInt((event.clientX - BCR.left - 60)/cellwidth); 
+        const y = parseInt((h - (event.clientY - BCR.top))/cellheight);
         if (mode == 'add'){
             addNote(x, y);
             drawScore();
@@ -251,7 +252,7 @@ if (!page && !model) {
             drawScore();
         } else if (mode == 'text') {
             if (hasInput) return;
-            var selectedIndex
+            var selectedIndex;
             addInput(x, y);
         }
     }
@@ -269,14 +270,10 @@ if (!page && !model) {
         const reader = new FileReader();
         reader.onload = function (e) {
             const midi = new Midi(e.target.result);
-            //console.log(midi);
             notes = []
             for (i = 0; i < midi.tracks[0].notes.length; i++){
                 notes.push([(midi.tracks[0].notes[i].ticks)/120, midi.tracks[0].notes[i].midi - 54, ' ', false])
             }
-            console.log(midi.tracks[0].notes[0].midi - 57)
-            console.log((midi.tracks[0].notes[0].ticks)/120)
-            console.log(midi.tracks[0].endOfTrackTicks/5)
             canvas.style.width = midi.tracks[0].endOfTrackTicks/5 + 60 + 'px'
             w = canvas.scrollWidth;    
             resizeCanvasToDisplaySize(canvas)
@@ -352,6 +349,7 @@ if (!page && !model) {
     function addInput(x, y) {
         for (i=0; i<notes.length; i++){
             if (notes[i][0] == x && notes[i][1] == y){
+                var BCR = canvas.getBoundingClientRect();
                 
                 selectedIndex = i;
                 var input = document.createElement('input');
@@ -359,8 +357,8 @@ if (!page && !model) {
                 input.type = 'text';
                 input.style.position = 'fixed';
                 input.style.zIndex = 2;
-                input.style.left = x * cellwidth + 60 + ctx.canvas.offsetLeft + 'px';
-                input.style.top = h - y * cellheight + ctx.canvas.offsetTop + 'px';
+                input.style.left = x * cellwidth + 60 + BCR.left + 'px';
+                input.style.top = h - y * cellheight + BCR.top + 'px';
             
                 input.onkeydown = function(e){
                     var keyCode = e.keyCode;
