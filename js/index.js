@@ -1,4 +1,14 @@
 
+function isMobile(){
+	var UserAgent = navigator.userAgent;
+	if (UserAgent.match(/iPhone|iPod|Android|Windows CE|BlackBerry|Symbian|Windows Phone|webOS|Opera Mini|Opera Mobi|POLARIS|IEMobile|lgtelecom|nokia|SonyEricsson/i) != null || UserAgent.match(/LG|SAMSUNG|Samsung/) != null)
+	{
+		return true;
+	}else{
+		return false;
+	}
+}
+
 let vh = window.innerHeight * 0.01;
 let vw = window.innerWidth * 0.01;
 document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -194,8 +204,8 @@ if (!page && !model) {
 
     var ctx0=canvas0.getContext("2d");
     var ctx=canvas.getContext("2d");
-    var w = canvas.scrollWidth;    
-    var h = canvas.scrollHeight;
+    var w = canvas.width;    
+    var h = canvas.height;
     var cellwidth=24;
     var cellheight=h/29;
 
@@ -205,6 +215,8 @@ if (!page && !model) {
     if (!bpm) {
         bpm = 120;
     }
+    
+    var mobilecanvaslimit = 25000;
 
     document.querySelector("#mode-select").onclick = function(e){
         document.querySelector("#mode-select").classList.add('selected');
@@ -292,7 +304,12 @@ if (!page && !model) {
             for (i = 0; i < midi.tracks[0].notes.length; i++){
                 notes.push([(midi.tracks[0].notes[i].ticks)/120, midi.tracks[0].notes[i].midi - 54, ' ', false])
             }
-            canvas.style.width = midi.tracks[0].endOfTrackTicks/5 + 60 + 'px'
+            if (device == mobile){
+              canvas.style.width = mobilecanvaslimit + 'px'
+              } else {
+                            canvas.style.width = midi.tracks[0].endOfTrackTicks/5 + 60 + 'px'
+                }
+
             w = canvas.scrollWidth;    
             resizeCanvasToDisplaySize(canvas)
             drawScore();
