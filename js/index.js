@@ -11,6 +11,24 @@ window.addEventListener('resize', () => {
 })
 
 
+const freqArray = tf.tensor1d([parseInt(98 / 5.55), parseInt(104 / 5.55), parseInt(110 / 5.55), parseInt(117 / 5.55), parseInt(123 / 5.55), parseInt(131 / 5.55), parseInt(139 / 5.55), parseInt(147 / 5.55), parseInt(156 / 5.55), parseInt(165 / 5.55), parseInt(175 / 5.55), parseInt(185 / 5.55), parseInt(196 / 5.55), parseInt(208 / 5.55), parseInt(220 / 5.55), parseInt(233 / 5.55), parseInt(247 / 5.55), parseInt(262 / 5.55), parseInt(277 / 5.55), parseInt(294 / 5.55), parseInt(311 / 5.55), parseInt(330 / 5.55), parseInt(349 / 5.55), parseInt(370 / 5.55), parseInt(392 / 5.55), parseInt(415 / 5.55), parseInt(440 / 5.55), 0], 'int32')
+
+var freqOneHot = tf.oneHot(freqArray, 1000)
+
+for (i = 1; i < 30; i++){
+    freqOneHot = tf.add(freqOneHot, tf.oneHot(tf.mul(freqArray, tf.scalar(i+2, 'int32')), 1000, onValue=0.8))
+    freqOneHot = tf.add(freqOneHot, tf.oneHot(tf.tensor1d([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 600+10*i], 'int32'), 1000))
+}
+
+freqOneHot = tf.clipByValue(freqOneHot, 0, 1)
+
+const num = {'' : [0, 0, 0], ' ' : [0, 0, 0], 'a': [1, 0.7, 0.7], 'e': [1, 1, 0.7], 'i': [0.7, 1, 0.7], 'o': [0.7, 1, 1], 'u': [0.7, 0.7, 1],
+    'w': [0.7, 0.7, 1], 'y':[0.7, 1, 0.7], 'h': [0.7, 0.7, 0.7], 'f': [0.7, 0.7, 0.7],
+    'r': [1, 0.4, 0.4], 'n': [0.4, 1, 0.4], 'N': [0.5, 1, 0.5], 'm': [0.4, 0.4, 1],
+    'g': [0.4, 0, 0], 'd': [0, 0.4, 0], 'b': [0, 0, 0.4],
+    'k': [0.2, 0, 0], 't': [0, 0.2, 0], 'T': [0, 0.1, 0], 'p': [0, 0, 0.2],
+    's': [0.7, 0.4, 0.4], 'sh': [0.7, 0.4, 0.4], 'ch': [0.4, 0.7, 0.4], 'ts': [0.4, 0.7, 0.4], 'z': [0.4, 0.4, 0.7], 'j': [0.4, 0.4, 0.7]}
+
 function parseMd(md){
 
     var md0 = md;
@@ -158,11 +176,11 @@ if (!page && !model) {
     .catch(err => { throw err });
     
 } else if (model) {
-    async function importModel (model) {
-        const mymodel = await tf.loadLayersModel('/models/'+model+'/model.json');
-    }
+   // async function importModel (model) {
+    //    const mymodel = await tf.loadLayersModel('/models/'+model+'/model.json');
+   // }
     document.querySelector(".page_title").innerHTML = "<div id='modebar'><i class='bx bx-checkbox-checked selected' id='mode-select'></i></i><i class='bx bx-pencil' id='mode-add'></i><i class='bx bx-eraser' id='mode-remove'></i><i class='bx bx-text' id='mode-text'></i></div>";
-    document.querySelector("#post").innerHTML += '<input type="file" id="midiFile" accept=".mid"/>';
+    document.querySelector("#post").innerHTML += '미디: <input type="file" id="midiFile" accept=".mid"/> 모델: <input type="file" id="modelFile" accept=".zip"/> <input type="button" value="재생" id="playButton"/>';
 
     document.querySelector("#piano-roll").innerHTML = '<canvas id="noteguide"></canvas>';
     document.querySelector("#piano-roll").innerHTML += '<canvas id="pianoroll"></canvas>';
@@ -286,12 +304,114 @@ if (!page && !model) {
     const midiSource = document.querySelector('#midiFile')
 
     midiSource.addEventListener("change", (e) => {
-        //get the files
         const files = e.target.files;
         if (files.length > 0) {
             const file = files[0];
             parseFile(file);
         }
+    });
+
+    const modelSource = document.querySelector('#modelFile')
+
+    modelSource.addEventListener("change", (evt) => {
+
+        var zipFile = evt.target.files[0];
+
+        // multithreaded = false is slower and blocks the UI thread if the files
+        // inside are compressed, but it can be faster if they are not.
+        const getFiles = async (zipFile, multithreaded = true) => {
+            const zipBuffer = new Uint8Array(await zipFile.arrayBuffer());
+            const unzipped = multithreaded
+            ? await new Promise((resolve, reject) => fflate.unzip(
+                zipBuffer,
+                (err, unzipped) => err
+                    ? reject(err)
+                    : resolve(unzipped)
+                ))
+            : fflate.unzipSync(zipBuffer);
+            const fileArray = Object.keys(unzipped)
+            .filter(filename => unzipped[filename].length > 0)
+            .map(filename => new File([unzipped[filename]], filename));
+            return fileArray;
+        }
+        
+        getFiles(zipFile).then(function(fileArray){
+            console.log(fileArray)
+            
+            var modelWeights = [0]
+            for (var i=0; i<fileArray.length; i++){
+                if (fileArray[i].name.includes('.json') && !fileArray[i].name.includes('._')){
+                    modelWeights[0] = fileArray[i]
+                } else if(fileArray[i].name.includes('.bin')) {
+                    modelWeights.push(fileArray[i])
+                }
+            }
+            console.log(modelWeights)
+
+            document.querySelector('#playButton').onclick = function(e) {
+
+                var inputArray = []
+                var startTime = []
+                var endNote = []
+                var mem
+
+                var k = 0;
+                var i = 0;
+
+                while (i < notes.length){
+                    while (notes[i][0] * bpm / 60 / 16 < (k+1) * 10) {
+                        if (i == 0 || startTime.length == endNote.length){
+                            startTime.push(notes[i][0])
+                        }
+                        if (notes[i][2] < ' ') {
+                            mem = i
+                        }
+                        i++;
+                        if (i == notes.length) { break; }
+                        console.log(k, notes[i][0] * bpm / 60 / 16, (k+1) * 10)
+                    }
+                    endNote.push(mem)
+                    k++;
+                }
+
+                var j = 0;
+
+                for (var i = 0; i < notes.length; i++){
+                    if (startTime[j] == notes[i][0]){
+                        inputArray.push([])
+                        j++;
+                    }
+                    inputArray[j-1].push([notes[i][0] - startTime[j-1], notes[i][1], notes[i][2]])
+                }
+
+                console.log(inputArray)
+                var inputData = []
+
+                for (var i = 0; i < inputArray.length; i++){
+                    inputData.push([])
+                    for (k = 0; k < 1770 ; k++){
+                        for (l = 0; l < inputArray[i].length; l++){
+                            if (l == inputArray[i].length - 1) {
+                                if (k >= inputArray[i][l][0] * bpm / 60 / 16 * 177 && k < 1770){
+                                    inputData[i].push(tf.transpose(tf.mul(tf.tensor1d(num[inputArray[i][l][2]]).expandDims(1), tf.broadcastTo(freqOneHot.arraySync()[inputArray[i][l][1]], [1, 1000]))))
+                                }
+                            } else {
+                                if (k >= inputArray[i][l][0] * bpm / 60 / 16 * 177 && k < 1770){
+                                    inputData[i].push(tf.transpose(tf.mul(tf.tensor1d(num[inputArray[i][l][2]]).expandDims(1), tf.broadcastTo(freqOneHot.arraySync()[inputArray[i][l][1]], [1, 1000]))))
+                                }
+                            }
+                        }
+                    }
+                }
+
+                async function importModel (models) {
+                    const mymodel = await tf.loadLayersModel(tf.io.browserFiles(models));
+                }
+
+                importModel(modelWeights)
+
+            }
+        })
     });
 
     function drawScore(){
