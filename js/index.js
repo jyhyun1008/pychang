@@ -1,4 +1,11 @@
 
+var device
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+ device = mobile
+} else {
+  device = notmobile
+  }
+
 let vh = window.innerHeight * 0.01;
 let vw = window.innerWidth * 0.01;
 document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -187,6 +194,11 @@ if (!page && !model) {
     if (!bpm) {
         bpm = 120;
     }
+    
+    var canvaslimit
+    if (device==mobile) {
+      canvaslimit=25000;
+      }
 
     document.querySelector("#mode-select").onclick = function(e){
         document.querySelector("#mode-select").classList.add('selected');
@@ -274,7 +286,12 @@ if (!page && !model) {
             for (i = 0; i < midi.tracks[0].notes.length; i++){
                 notes.push([(midi.tracks[0].notes[i].ticks)/120, midi.tracks[0].notes[i].midi - 54, ' ', false])
             }
-            canvas.style.width = midi.tracks[0].endOfTrackTicks/5 + 60 + 'px'
+            if (device == mobile){
+              canvas.style.width =canvaslimit
+              } else {
+                            canvas.style.width = midi.tracks[0].endOfTrackTicks/5 + 60 + 'px'
+                }
+
             w = canvas.scrollWidth;    
             resizeCanvasToDisplaySize(canvas)
             drawScore();
