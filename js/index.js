@@ -181,8 +181,8 @@ if (!page && !model) {
     var canvas = document.getElementById('pianoroll');
     const pitch = ['-', 'G2', 'G#2', 'A2', 'A#2', 'B2', 'C3', 'C#3', 'D2', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3', 'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', '-']
 
-    resizeCanvasToDisplaySize(canvas); 
-    resizeCanvasToDisplaySize(canvas0);
+    //resizeCanvasToDisplaySize(canvas); 
+    //resizeCanvasToDisplaySize(canvas0);
 
     var ctx0=canvas0.getContext("2d");
     var ctx=canvas.getContext("2d");
