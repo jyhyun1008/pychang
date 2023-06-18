@@ -198,7 +198,7 @@ if (!page && !model) {
         bpm = 120;
     }
     
-    var movilecanvaslimit = 25000;
+    var mobilecanvaslimit = 25000;
 
     document.querySelector("#mode-select").onclick = function(e){
         document.querySelector("#mode-select").classList.add('selected');
