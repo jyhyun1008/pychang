@@ -11,7 +11,7 @@ PyChang을 통해 만들어진 라이브러리를 한번 체험해 보시거나,
 
 * [PyChang 소개](https://yeojibur.in/pychang/?p=about)
 
-> 가장 평상시의 노래
+> 가장 평범한 노래
 
 라는 모토로 만들어지고 있는, Pix2Pix와 STFT 방법을 통해 노랫소리를 합성하는 AI 음성 합성 엔진입니다.
 
