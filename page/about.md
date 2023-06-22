@@ -18,3 +18,7 @@
 * Dataset 65, Steps 12K
 
 <iframe class="youtube" width="560" height="315" src="https://www.youtube.com/embed/cHCqBWZOqco" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+* Dataset 71, Epoch 400, Steps 28K
+
+<iframe width="560" height="315" class="youtube" src="https://www.youtube.com/embed/0bCSZ1WOfzw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
