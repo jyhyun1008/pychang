@@ -22,3 +22,11 @@
 * Dataset 71, Epoch 400, Steps 28K
 
 <iframe width="560" height="315" class="youtube" src="https://www.youtube.com/embed/0bCSZ1WOfzw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+* Dataset 177, Epoch 226, Steps 50K
+
+<iframe width="560" height="315" class="youtube" src="https://www.youtube.com/embed/WKoj3tp2P4I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+* Dataset 216, Epoch 200, Steps 43K
+
+<iframe width="560" height="315" class="youtube" src="https://www.youtube.com/embed/buUSMUeq0fc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
