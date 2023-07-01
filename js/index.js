@@ -20,6 +20,7 @@ window.addEventListener('resize', () => {
     document.documentElement.style.setProperty('--vh', `${vh}px`);
 })
 
+const pitch = ['-', 'G2', 'G#2', 'A2', 'A#2', 'B2', 'C3', 'C#3', 'D2', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3', 'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', '-']
 
 const freqArray = tf.tensor1d([parseInt(98 / 5.55), parseInt(104 / 5.55), parseInt(110 / 5.55), parseInt(117 / 5.55), parseInt(123 / 5.55), parseInt(131 / 5.55), parseInt(139 / 5.55), parseInt(147 / 5.55), parseInt(156 / 5.55), parseInt(165 / 5.55), parseInt(175 / 5.55), parseInt(185 / 5.55), parseInt(196 / 5.55), parseInt(208 / 5.55), parseInt(220 / 5.55), parseInt(233 / 5.55), parseInt(247 / 5.55), parseInt(262 / 5.55), parseInt(277 / 5.55), parseInt(294 / 5.55), parseInt(311 / 5.55), parseInt(330 / 5.55), parseInt(349 / 5.55), parseInt(370 / 5.55), parseInt(392 / 5.55), parseInt(415 / 5.55), parseInt(440 / 5.55), 0], 'int32')
 
@@ -175,15 +176,459 @@ if (!page && !model) {
     })
     .catch(err => { throw err });
 } else if (page) {
-    var url = "https://raw.githubusercontent.com/jyhyun1008/seodangcat/main/page/"+page+".md"
-    fetch(url)
-    .then(res => res.text())
-    .then((out) => {
-        document.querySelector(".page_title").innerText = page.substring(page.lastIndexOf('/') + 1)
-        document.querySelector("#post").innerHTML += parseMd(out)
+    if (page == 'dataset'){
 
-    })
-    .catch(err => { throw err });
+        document.querySelector(".page_title").innerHTML = "<div id='modebar'><i class='bx bx-checkbox-checked selected' id='mode-select'></i></i><i class='bx bx-pencil' id='mode-add'></i><i class='bx bx-eraser' id='mode-remove'></i><i class='bx bx-text' id='mode-text'></i></div>";
+        document.querySelector("#post").innerHTML += '<div class="filebox"><input class="mp3-name" value="첨부파일" placeholder="첨부파일"><label for="mp3File">MP3</label> <input type="file" id="mp3File" accept=".mp3"/></div><br><div class="filebox"><input class="midi-name" value="첨부파일" placeholder="첨부파일"><label for="midiFile">MIDI</label> <input type="file" id="midiFile" accept=".mid"/></div><br> <input type="button" value="재생" id="playButton"/> <input type="button" value="저장" id="saveButton"/> <a id="saveLink"></a>';
+
+        $("#file").on('change',function(){
+            var fileName = $("#file").val();
+            
+          });
+
+        document.querySelector("#piano-roll").innerHTML += '<audio id="sound" controls></audio><div id="noteGuideContainer"><canvas id="noteguide"></canvas></div>';
+        document.querySelector("#piano-roll").innerHTML += '<div id ="editorContainer"><canvas id="editor"></canvas><canvas id="waveviewer"></canvas><div class="v-line"></div></div>';
+
+        const playButton = document.querySelector("#playButton")
+        const playControl = document.querySelector("#sound")
+
+        var mode = 'select';
+
+        document.querySelector("#mode-select").onclick = function(e){
+            document.querySelector("#mode-select").classList.add('selected');
+            document.querySelector("#mode-add").classList.remove('selected');
+            document.querySelector("#mode-remove").classList.remove('selected');
+            document.querySelector("#mode-text").classList.remove('selected');
+            mode = 'select';
+        }
+
+        document.querySelector("#mode-add").onclick = function(e){
+            document.querySelector("#mode-select").classList.remove('selected');
+            document.querySelector("#mode-add").classList.add('selected');
+            document.querySelector("#mode-remove").classList.remove('selected');
+            document.querySelector("#mode-text").classList.remove('selected');
+            mode = 'add';
+        }
+
+        document.querySelector("#mode-remove").onclick = function(e){
+            document.querySelector("#mode-select").classList.remove('selected');
+            document.querySelector("#mode-add").classList.remove('selected');
+            document.querySelector("#mode-remove").classList.add('selected');
+            document.querySelector("#mode-text").classList.remove('selected');
+            mode = 'remove';
+        }
+
+        document.querySelector("#mode-text").onclick = function(e){
+            document.querySelector("#mode-select").classList.remove('selected');
+            document.querySelector("#mode-add").classList.remove('selected');
+            document.querySelector("#mode-remove").classList.remove('selected');
+            document.querySelector("#mode-text").classList.add('selected');
+            mode = 'text';
+        }
+
+        var canvas = document.getElementById('waveviewer');
+        var canvas0 = document.getElementById('noteguide');
+        var canvas1 = document.getElementById('editor');
+        resizeCanvasToDisplaySize(canvas); 
+        resizeCanvasToDisplaySize(canvas0); 
+        resizeCanvasToDisplaySize(canvas1); 
+
+        var ctx=canvas.getContext("2d");
+        var ctx0=canvas0.getContext("2d");
+        var ctx1=canvas1.getContext("2d");
+        //ctx.globalCompositeOperation = 'multiply';
+
+        var w = canvas.width;    
+        var h = canvas.height;
+
+        var cellwidth = 10;
+        var cellheight=h/29;
+
+        var notes = [];
+        var fileName;
+
+        drawPitchGuide();
+        drawPianoGrid();
+        drawScore();
+
+        const mp3Source = document.querySelector('#mp3File')
+
+        mp3Source.addEventListener("change", (e) => {
+            
+            const files = e.target.files;
+            if (files.length > 0) {
+                const file = files[0];
+                fileName = file.name.substring(0, file.name.lastIndexOf('.'))
+                $(".mp3-name").val(fileName);
+
+                var reader = new FileReader();
+                reader.addEventListener('load', function(e) {
+                    var url = e.target.result;
+                    drawAudio(url);
+                    playControl.src = URL.createObjectURL(file);
+                    var playAudio = new Audio(playControl.src);
+
+                    playButton.addEventListener('click', function(event){
+                        if (playButton.value == '재생') {
+                            playButton.value = '정지';
+                            playAudio.play();
+                            (function repeatOften() {
+                                vLinePosition += 10;
+                                vLine.setAttribute('style', 'height: 609px; left: '+vLinePosition+'px;');
+                                playAnimation = requestAnimationFrame(repeatOften);
+                            })();
+                        } else if (playButton.value == '정지') {
+                            playButton.value = '재생';
+                            playAudio.pause();
+                            cancelAnimationFrame(playAnimation);
+                        }
+                    });
+
+                    document.onkeydown = function(e){
+                        var keyCode = e.keyCode;
+                        if (keyCode === 32) {
+                            if (playButton.value == '재생') {
+                                playButton.value = '정지';
+                                playAudio.play();
+                                (function repeatOften() {
+                                    vLinePosition += 10;
+                                    vLine.setAttribute('style', 'height: 609px; left: '+vLinePosition+'px;');
+                                    playAnimation = requestAnimationFrame(repeatOften);
+                                })();
+                            } else if (playButton.value == '정지') {
+                                playButton.value = '재생';
+                                playAudio.pause();
+                                cancelAnimationFrame(playAnimation);
+                            }
+                        }
+                    };
+
+                    canvas1.addEventListener('click', function(event){
+                        if (mode == 'select'){
+                            var BCR = canvas1.getBoundingClientRect();
+                            var x = parseInt((event.clientX - BCR.left)/cellwidth); 
+                            vLinePosition = x*cellwidth;
+                            vLine.setAttribute('style', 'height: 609px; left: '+vLinePosition+'px;');
+                            if (playButton.value == '정지'){
+                                playButton.value = '재생';
+                                playAudio.pause();
+                                cancelAnimationFrame(playAnimation);
+                            }
+                            currentTimeDelay = x/60;
+                            playAudio.currentTime = currentTimeDelay;
+                        }
+                    });
+
+                });
+                reader.readAsDataURL(file);
+
+                // Set up audio context
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                const audioContext = new AudioContext();
+
+                /**
+                 * Retrieves audio from an external source, the initializes the drawing function
+                 * @param {String} url the url of the audio we'd like to fetch
+                 */
+                const drawAudio = (url) => {
+                fetch(url)
+                    .then(response => response.arrayBuffer())
+                    .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+                    .then(audioBuffer => draw(normalizeData(filterData(audioBuffer))));
+                };
+
+                /**
+                 * Filters the AudioBuffer retrieved from an external source
+                 * @param {AudioBuffer} audioBuffer the AudioBuffer from drawAudio()
+                 * @returns {Array} an array of floating point numbers
+                 */
+                const filterData = (audioBuffer) => {
+                    const rawData = audioBuffer.getChannelData(0); // We only need to work with one channel of data
+                    const samples = 18000; // Number of samples we want to have in our final data set
+                    const blockSize = (44100 / 1200); // the number of samples in each subdivision
+                    const filteredData = [];
+                    for (let i = 0; i < parseInt(samples); i++) {
+                        value = rawData[Math.floor(blockSize * i)]
+                        filteredData.push(value); // divide the sum by the block size to get the average
+                    }
+                    return filteredData;
+                };
+
+                /**
+                 * Normalizes the audio data to make a cleaner illustration 
+                 * @param {Array} filteredData the data from filterData()
+                 * @returns {Array} an normalized array of floating point numbers
+                 */
+                const normalizeData = filteredData => {
+                    const multiplier = Math.pow(Math.max(...filteredData), -1);
+                    var resultData = filteredData.map(n => n * multiplier)
+                    return resultData;
+                }
+
+                const draw = (normalizedData) => {
+                    ctx0.clearRect(0, 0, canvas1.width, canvas1.height);
+                    const padding = 0;
+                    var width = 0.5;
+                    ctx.lineWidth = 1; // how thick the line is
+                    ctx.strokeStyle = "#70ad47"; // what color our line is
+                    ctx.beginPath();
+                    ctx.moveTo(0, h/2);
+                    for (let i = 0; i < normalizedData.length; i++) {
+                        const x = width * i;
+                        let height = normalizedData[i] * canvas.offsetHeight - padding;
+                        ctx.lineTo(x, height+h/2);
+                    }
+                    ctx.stroke();
+                }
+
+            }
+
+        });
+
+        canvas1.onclick = function(event){
+            var BCR = canvas1.getBoundingClientRect();
+            const x = parseInt((event.clientX - BCR.left)/cellwidth); 
+            const y = parseInt((h - (event.clientY - BCR.top))/cellheight);
+            if (mode == 'add'){
+                addNote(x, y);
+                drawScore();
+            } else if (mode == 'remove'){
+                removeNote(x, y);
+                drawScore();
+            } else if (mode == 'select'){
+                selectNote(x, y);
+                drawScore();
+            } else if (mode == 'text') {
+                if (hasInput) return;
+                var selectedIndex;
+                addInput(x, y);
+            }
+        }
+
+        function addNote (x, y, s=' '){
+            var CanAddNote = true
+            for (i=0; i<notes.length; i++){
+                if (notes[i][0] == x){
+                    CanAddNote = false
+                }
+            }
+            if (CanAddNote == true){
+                notes.push([x, y, s, false]);
+                notes.sort(function(a, b)  {
+                    return a[0] - b[0];
+                });
+            }
+        }
+
+
+        function drawNote(x,y, s=' ', selected=false){
+            x=x*cellwidth;
+            y= h - y*cellheight - cellheight;
+            ctx1.beginPath();
+            ctx1.fillStyle = "rgb(40,40,40)";
+            if(selected){
+                ctx1.strokeStyle = "rgb(75, 139, 59)";
+            }else{
+                ctx1.strokeStyle = "rgb(40,40,40)";
+            }
+            ctx1.moveTo(x, y);
+            ctx1.lineTo(x, y+cellheight)
+            ctx1.stroke();
+            ctx1.font = "16px serif";
+            ctx1.fillText(s, x + 10, y + cellheight - 5);
+        }
+    
+        function selectNote(x, y){
+            for (i=0; i<notes.length; i++){
+                if (notes[i][0] == x && notes[i][1] == y){
+                    notes[i][3] = true;
+                } else {
+                    notes[i][3] = false;
+                }
+            }
+        }
+    
+        function removeNote(x, y){
+            for (i=0; i<notes.length; i++){
+                if (notes[i][0] == x && notes[i][1] == y){
+                    notes.splice(i, 1);
+                }
+            }
+        }
+    
+        function removeValue(value, index, arr) {
+            // If the value at the current array index matches the specified value (2)
+            if (value[0] === x && value[1] === y) {
+            // Removes the value from the original array
+                arr.splice(index, 1);
+                return true;
+            }
+            return false;
+        }
+    
+        function addInput(x, y) {
+            for (i=0; i<notes.length; i++){
+                if (notes[i][0] == x && notes[i][1] == y){
+                    var BCR = canvas1.getBoundingClientRect();
+                    
+                    selectedIndex = i;
+                    var input = document.createElement('input');
+                
+                    input.type = 'text';
+                    input.style.position = 'fixed';
+                    input.style.zIndex = 2;
+                    input.style.left = x * cellwidth + BCR.left + 'px';
+                    input.style.top = h - y * cellheight + BCR.top + 'px';
+                
+                    input.onkeydown = function(e){
+                        var keyCode = e.keyCode;
+                        if (keyCode === 13) {
+                            document.body.removeChild(this);
+                            hasInput = false;
+                            notes[selectedIndex][2] = this.value;
+                            drawScore();
+                        }
+                    };
+                
+                    document.body.appendChild(input);
+                
+                    input.focus();
+                
+                    hasInput = true;
+                }
+            }
+    
+        }
+
+        var currentMidi
+
+        function parseFile(file) {
+            //read the file
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const midi = new Midi(e.target.result);
+                notes = []
+                for (i = 0; i < midi.tracks[0].notes.length; i++){
+                    notes.push([(parseInt(midi.tracks[0].notes[i].ticks/16)+1), midi.tracks[0].notes[i].midi - 54, ' ', false])
+                }
+                drawScore();
+                currentMidi = midi;
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    
+        const midiSource = document.querySelector('#midiFile')
+    
+        midiSource.addEventListener("change", (e) => {
+            const files = e.target.files;
+            if (files.length > 0) {
+                const file = files[0];
+                var midifileName = file.name.substring(0, file.name.lastIndexOf('.'))
+                $(".midi-name").val(midifileName);
+
+                parseFile(file);
+            }
+        });
+
+        function drawPianoGrid(){
+            for(y=0;y<h;y=y+cellheight){
+                for(x=0;x<w;x=x+cellwidth){
+                if((x/cellwidth) % 60 ==0){
+                    ctx.beginPath();    
+                    ctx.moveTo(x,0);
+                    ctx.strokeStyle = "rgb(254, 254, 254)";
+                    ctx.lineTo(x,h);
+                    ctx.shadowBlur=0;
+                    ctx.stroke();
+                    if(y == cellheight){
+                        ctx.fillStyle = "rgb(40,40,40)";
+                        ctx.font = "16px serif";
+                        ctx.fillText(x/cellwidth/60, x+10, 15);
+                    }
+                } else if ((x/cellwidth) % 10 ==0){
+                    ctx.beginPath();    
+                    ctx.moveTo(x,0);
+                    ctx.strokeStyle = "rgb(245, 245, 245)";
+                    ctx.lineTo(x,h);
+                    ctx.shadowBlur=0;
+                    ctx.stroke();
+                }
+                ctx.beginPath();
+                if((y/cellheight) % 12 == 10 || (y/cellheight) % 12 == 11 || (y/cellheight) % 12 == 1 || (y/cellheight) % 12 == 3 || (y/cellheight) % 12 == 5 || (y/cellheight) % 12 == 6 || (y/cellheight) % 12 == 8 ){
+                    ctx.fillStyle = "rgb(225,225,225)";
+                }else{
+                    ctx.fillStyle = "rgb(255,219,88)";
+                }
+                ctx.strokeStyle = "rgb(240,240,240)";
+                ctx.rect(x, y, cellwidth, cellheight);
+                ctx.fill()
+                ctx.stroke();
+                }
+            }
+        }
+
+        function drawScore(){
+            ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+                for (i=0; i<notes.length; i++){
+                    drawNote(notes[i][0], notes[i][1], notes[i][2], notes[i][3]);
+                }
+            }
+        
+        function drawPitchGuide(){
+            for (y=0; y<h; y=y+cellheight){
+                ctx0.fillStyle = "rgb(40,40,40)";
+                ctx0.font = "16px serif";
+                ctx0.fillText(pitch[29 - parseInt(y/cellheight)], 10, y - 5);
+            }
+        }
+
+        function resizeCanvasToDisplaySize(canvas) {
+            // look up the size the canvas is being displayed
+            var width = canvas.clientWidth;
+            var height = canvas.clientHeight;
+        
+            // If it's resolution does not match change it
+            if (canvas.width !== width || canvas.height !== height) {
+                canvas.width = width;
+                canvas.height = height;
+                return true;
+            }
+        
+            return false;
+            }
+        
+        var vLine = document.getElementsByClassName('v-line')[0];
+        var vLinePosition = 0;
+        vLine.setAttribute('style', 'height: 609px; left: '+vLinePosition+'px;');
+
+        saveButton.addEventListener('click', function(event){
+            saveArray = [[0, 0, '']]
+            for (i=0; i < notes.length; i++){
+                if (notes[i][2] == 'ch' || notes[i][2] == 's' || notes[i][2] == 'ts' || notes[i][2] == 'z' || notes[i][2] == 'j' || notes[i][2] == 'sh' ){
+                    saveArray.push("["+notes[i][0]/2+", 25, '"+notes[i][2]+"']")
+                } else {
+                    saveArray.push("["+notes[i][0]/2+", "+notes[i][1]+", '"+notes[i][2]+"']")
+                }
+            }
+            contents = saveArray.toString()
+            const saveFile = new Blob([contents], { type: 'text/plain' });
+            const link = document.querySelector("#saveLink");
+            link.innerText = '다운로드';
+            link.href = URL.createObjectURL(saveFile);
+            link.download = fileName+".txt";
+        });
+        
+    } else {
+        var url = "https://raw.githubusercontent.com/jyhyun1008/seodangcat/main/page/"+page+".md"
+        fetch(url)
+        .then(res => res.text())
+        .then((out) => {
+            document.querySelector(".page_title").innerText = page.substring(page.lastIndexOf('/') + 1)
+            document.querySelector("#post").innerHTML += parseMd(out)
+    
+        })
+        .catch(err => { throw err });
+    }
     
 } else if (model) {
    // async function importModel (model) {
@@ -197,7 +642,6 @@ if (!page && !model) {
 
     var canvas0 = document.getElementById('noteguide');
     var canvas = document.getElementById('pianoroll');
-    const pitch = ['-', 'G2', 'G#2', 'A2', 'A#2', 'B2', 'C3', 'C#3', 'D2', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3', 'C4', 'C#4', 'D4', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', '-']
 
     resizeCanvasToDisplaySize(canvas); 
     resizeCanvasToDisplaySize(canvas0);
@@ -264,7 +708,90 @@ if (!page && !model) {
         }
         if (CanAddNote == true){
             notes.push([x, y, s, false]);
+            notes.sort(function(a, b)  {
+                return a[0] - b[0];
+            });
         }
+    }
+
+
+    function drawNote(x,y, s=' ', selected=false){
+    x=x*cellwidth + 60;
+    y= h - y*cellheight - cellheight;
+    ctx.beginPath();
+    ctx.fillStyle = "rgb(40,40,40)";
+    if(selected){
+        ctx.strokeStyle = "rgb(75, 139, 59)";
+    }else{
+        ctx.strokeStyle = "rgb(40,40,40)";
+    }
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y+cellheight)
+    ctx.stroke();
+    ctx.font = "16px serif";
+    ctx.fillText(s, x + 10, y + cellheight - 5);
+    }
+
+    function selectNote(x, y){
+        for (i=0; i<notes.length; i++){
+            if (notes[i][0] == x && notes[i][1] == y){
+                notes[i][3] = true;
+            } else {
+                notes[i][3] = false;
+            }
+        }
+    }
+
+    function removeNote(x, y){
+        for (i=0; i<notes.length; i++){
+            if (notes[i][0] == x && notes[i][1] == y){
+                notes.splice(i, 1);
+            }
+        }
+    }
+
+    function removeValue(value, index, arr) {
+        // If the value at the current array index matches the specified value (2)
+        if (value[0] === x && value[1] === y) {
+        // Removes the value from the original array
+            arr.splice(index, 1);
+            return true;
+        }
+        return false;
+    }
+
+    function addInput(x, y) {
+        for (i=0; i<notes.length; i++){
+            if (notes[i][0] == x && notes[i][1] == y){
+                var BCR = canvas.getBoundingClientRect();
+                
+                selectedIndex = i;
+                var input = document.createElement('input');
+            
+                input.type = 'text';
+                input.style.position = 'fixed';
+                input.style.zIndex = 2;
+                input.style.left = x * cellwidth + 60 + BCR.left + 'px';
+                input.style.top = h - y * cellheight + BCR.top + 'px';
+            
+                input.onkeydown = function(e){
+                    var keyCode = e.keyCode;
+                    if (keyCode === 13) {
+                        document.body.removeChild(this);
+                        hasInput = false;
+                        notes[selectedIndex][2] = this.value;
+                        drawScore();
+                    }
+                };
+            
+                document.body.appendChild(input);
+            
+                input.focus();
+            
+                hasInput = true;
+            }
+        }
+
     }
 
     canvas.onclick = function(event){
@@ -287,12 +814,6 @@ if (!page && !model) {
         }
     }
 
-   // drawNote(2,4);
-   // drawNote(4,8);
-   // drawNote(7,12, 'la', true);
-
-   // drawPlayHead(357);
-
    var currentMidi
 
     function parseFile(file) {
@@ -304,7 +825,7 @@ if (!page && !model) {
             for (i = 0; i < midi.tracks[0].notes.length; i++){
                 notes.push([(midi.tracks[0].notes[i].ticks)/120, midi.tracks[0].notes[i].midi - 54, ' ', false])
             }
-            if (device == mobile){
+            if (isMobile == true){
               canvas.style.width = mobilecanvaslimit + 'px'
               } else {
                             canvas.style.width = midi.tracks[0].endOfTrackTicks/5 + 60 + 'px'
@@ -331,6 +852,8 @@ if (!page && !model) {
     const modelSource = document.querySelector('#modelFile')
 
     modelSource.addEventListener("change", (evt) => {
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         var zipFile = evt.target.files[0];
 
@@ -420,6 +943,8 @@ if (!page && !model) {
                         }
                     }
                 }
+
+                drawScore();
 
                 async function importModel (models) {
                     const mymodel = await tf.loadLayersModel(tf.io.browserFiles(models));
