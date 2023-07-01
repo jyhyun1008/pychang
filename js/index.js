@@ -367,6 +367,7 @@ if (!page && !model) {
 
                 const draw = (normalizedData) => {
                     ctx.clearRect(0, 0, canvas1.width, canvas1.height);
+                    drawPianoGrid();
                     const padding = 0;
                     var width = 0.5;
                     ctx.lineWidth = 1; // how thick the line is
@@ -602,7 +603,7 @@ if (!page && !model) {
         vLine.setAttribute('style', 'height: 609px; left: '+vLinePosition+'px;');
 
         saveButton.addEventListener('click', function(event){
-            saveArray = [[0, 0, '']]
+            saveArray = ["[0, 0, '']"]
             for (i=0; i < notes.length; i++){
                 if (notes[i][2] == 'ch' || notes[i][2] == 's' || notes[i][2] == 'ts' || notes[i][2] == 'z' || notes[i][2] == 'j' || notes[i][2] == 'sh' ){
                     saveArray.push("["+notes[i][0]/2+", 25, '"+notes[i][2]+"']")
