@@ -300,6 +300,30 @@ if (!page && !model) {
                                 playAudio.pause();
                                 cancelAnimationFrame(playAnimation);
                             }
+                        } else if (keyCode === 49) {
+                            document.querySelector("#mode-select").classList.add('selected');
+                            document.querySelector("#mode-add").classList.remove('selected');
+                            document.querySelector("#mode-remove").classList.remove('selected');
+                            document.querySelector("#mode-text").classList.remove('selected');
+                            mode = 'select';
+                        } else if (keyCode === 50) {
+                            document.querySelector("#mode-select").classList.remove('selected');
+                            document.querySelector("#mode-add").classList.add('selected');
+                            document.querySelector("#mode-remove").classList.remove('selected');
+                            document.querySelector("#mode-text").classList.remove('selected');
+                            mode = 'add';
+                        } else if (keyCode === 51) {
+                            document.querySelector("#mode-select").classList.remove('selected');
+                            document.querySelector("#mode-add").classList.remove('selected');
+                            document.querySelector("#mode-remove").classList.add('selected');
+                            document.querySelector("#mode-text").classList.remove('selected');
+                            mode = 'remove';
+                        } else if (keyCode === 52) {
+                            document.querySelector("#mode-select").classList.remove('selected');
+                            document.querySelector("#mode-add").classList.remove('selected');
+                            document.querySelector("#mode-remove").classList.remove('selected');
+                            document.querySelector("#mode-text").classList.add('selected');
+                            mode = 'text';
                         }
                     };
 
