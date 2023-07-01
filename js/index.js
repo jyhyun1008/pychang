@@ -366,7 +366,7 @@ if (!page && !model) {
                 }
 
                 const draw = (normalizedData) => {
-                    ctx0.clearRect(0, 0, canvas1.width, canvas1.height);
+                    ctx.clearRect(0, 0, canvas1.width, canvas1.height);
                     const padding = 0;
                     var width = 0.5;
                     ctx.lineWidth = 1; // how thick the line is
