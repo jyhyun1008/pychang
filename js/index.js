@@ -608,7 +608,7 @@ if (!page && !model) {
                 if (notes[i][2] == 'ch' || notes[i][2] == 's' || notes[i][2] == 'ts' || notes[i][2] == 'z' || notes[i][2] == 'j' || notes[i][2] == 'sh' ){
                     saveArray.push("["+notes[i][0]/2+", 25, '"+notes[i][2]+"']")
                 } else {
-                    saveArray.push("["+notes[i][0]/2+", "+notes[i][1] - 3+", '"+notes[i][2]+"']")
+                    saveArray.push("["+notes[i][0]/2+", "+(notes[i][1] - 3)+", '"+notes[i][2]+"']")
                 }
             }
             contents = saveArray.toString()
