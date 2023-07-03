@@ -423,7 +423,6 @@ if (!page && !model) {
                 drawScore();
             } else if (mode == 'select'){
                 selectNote(x, y);
-                drawScore();
             } else if (mode == 'text') {
                 if (hasInput) return;
                 var selectedIndex;
@@ -446,7 +445,6 @@ if (!page && !model) {
             }
         }
 
-
         function drawNote(x,y, s=' ', selected=false){
             x=x*cellwidth;
             y= h - y*cellheight - cellheight;
@@ -465,12 +463,28 @@ if (!page && !model) {
         }
     
         function selectNote(x, y){
+            var noteIndex
             for (i=0; i<notes.length; i++){
                 if (notes[i][0] == x && notes[i][1] == y){
                     notes[i][3] = true;
+                    noteIndex = i
                 } else {
                     notes[i][3] = false;
                 }
+            }
+
+            if (noteIndex >= 0) {
+                canvas1.onmouseup = function(e) {
+                    var BCR = canvas1.getBoundingClientRect();
+                    var curX = parseInt((e.clientX - BCR.left)/cellwidth); 
+                    var curY = parseInt((h - (e.clientY - BCR.top))/cellheight);
+                    
+                    notes[noteIndex][0] = curX
+                    notes[noteIndex][1] = curY
+
+                    drawScore();
+                }
+                
             }
         }
     
