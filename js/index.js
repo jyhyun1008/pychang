@@ -179,7 +179,7 @@ if (!page && !model) {
     if (page == 'dataset'){
 
         document.querySelector(".page_title").innerHTML = "<div id='modebar'><i class='bx bx-checkbox-checked selected' id='mode-select'></i></i><i class='bx bx-pencil' id='mode-add'></i><i class='bx bx-eraser' id='mode-remove'></i><i class='bx bx-text' id='mode-text'></i></div>";
-        document.querySelector("#post").innerHTML += '<div class="filebox"><input class="mp3-name" value="첨부파일" placeholder="첨부파일"><label for="mp3File">MP3</label> <input type="file" id="mp3File" accept=".mp3"/></div><br><div class="filebox"><input class="midi-name" value="첨부파일" placeholder="첨부파일"><label for="midiFile">MIDI</label> <input type="file" id="midiFile" accept=".mid"/></div><br> <input type="button" value="재생" id="playButton"/> <input type="button" value="저장" id="saveButton"/> <a id="saveLink"></a>';
+        document.querySelector("#post").innerHTML += '<div class="filebox"><input class="mp3-name" value="첨부파일" placeholder="첨부파일"><label for="mp3File">WAVE</label> <input type="file" id="mp3File" accept=".wav"/></div><br><div class="filebox"><input class="midi-name" value="첨부파일" placeholder="첨부파일"><label for="midiFile">MIDI</label> <input type="file" id="midiFile" accept=".mid"/></div><br> <input type="button" value="재생" id="playButton"/> <input type="button" value="저장" id="saveButton"/> <a id="saveLink"></a>';
 
         $("#file").on('change',function(){
             var fileName = $("#file").val();
@@ -369,7 +369,7 @@ if (!page && !model) {
                 const filterData = (audioBuffer) => {
                     const rawData = audioBuffer.getChannelData(0); // We only need to work with one channel of data
                     const samples = 18000; // Number of samples we want to have in our final data set
-                    const blockSize = (44100 / 1200); // the number of samples in each subdivision
+                    const blockSize = (48000 / 1200); // the number of samples in each subdivision
                     const filteredData = [];
                     for (let i = 0; i < parseInt(samples); i++) {
                         value = rawData[Math.floor(blockSize * i)]
