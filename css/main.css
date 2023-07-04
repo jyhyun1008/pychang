@@ -28,6 +28,8 @@
 
 body {
     background-color: var(--bg);
+    overscroll-behavior-x: contain !important;
+    overscroll-behavior-y: contain !important;
 }
 
 #wrapper{

@@ -1,4 +1,5 @@
 
+
 function isMobile(){
 	var UserAgent = navigator.userAgent;
 	if (UserAgent.match(/iPhone|iPod|Android|Windows CE|BlackBerry|Symbian|Windows Phone|webOS|Opera Mini|Opera Mobi|POLARIS|IEMobile|lgtelecom|nokia|SonyEricsson/i) != null || UserAgent.match(/LG|SAMSUNG|Samsung/) != null)
@@ -177,6 +178,11 @@ if (!page && !model) {
     .catch(err => { throw err });
 } else if (page) {
     if (page == 'dataset'){
+
+        window.addEventListener('beforeunload', (event) => {
+            event.preventDefault();
+            event.returnValue = '';
+        });
 
         document.querySelector(".page_title").innerHTML = "<div id='modebar'><i class='bx bx-checkbox-checked selected' id='mode-select'></i></i><i class='bx bx-pencil' id='mode-add'></i><i class='bx bx-eraser' id='mode-remove'></i><i class='bx bx-text' id='mode-text'></i></div>";
         document.querySelector("#post").innerHTML += '<div class="filebox"><input class="mp3-name" value="첨부파일" placeholder="첨부파일"><label for="mp3File">WAVE</label> <input type="file" id="mp3File" accept=".wav"/></div><br><div class="filebox"><input class="midi-name" value="첨부파일" placeholder="첨부파일"><label for="midiFile">MIDI</label> <input type="file" id="midiFile" accept=".mid"/></div><br> <input type="button" value="재생" id="playButton"/> <input type="button" value="저장" id="saveButton"/> <a id="saveLink"></a>';
@@ -430,7 +436,14 @@ if (!page && !model) {
                     const curY = parseInt((h - (e.clientY - BCR.top))/cellheight);
                     dragNote(x, y, curX, curY)
                 }
-            } else if (mode == 'text') {
+            }
+        }
+
+        canvas1.onclick = function(event){
+            var BCR = canvas1.getBoundingClientRect();
+            const x = parseInt((event.clientX - BCR.left)/cellwidth); 
+            const y = parseInt((h - (event.clientY - BCR.top))/cellheight);
+            if (mode == 'text') {
                 if (hasInput) return;
                 var selectedIndex;
                 addInput(x, y);
@@ -489,6 +502,10 @@ if (!page && !model) {
                     notes[noteIndex][0] = curX
                     notes[noteIndex][1] = curY
                     notes[noteIndex][3] = false;
+
+                    notes.sort(function(a, b)  {
+                        return a[0] - b[0];
+                    });
 
                     drawScore();
                 }
