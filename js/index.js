@@ -247,6 +247,8 @@ if (!page && !model) {
         var notes = [];
         var fileName;
 
+        var noteIndex = -1
+
         drawPitchGuide();
         drawPianoGrid();
         drawScore();
@@ -327,8 +329,8 @@ if (!page && !model) {
                         }
                     };
 
-                    canvas1.addEventListener('click', function(event){
-                        if (mode == 'select'){
+                    canvas1.addEventListener('mousedown', function(event){
+                        if (mode == 'select' && noteIndex == -1){
                             var BCR = canvas1.getBoundingClientRect();
                             var x = parseInt((event.clientX - BCR.left)/cellwidth); 
                             vLinePosition = x*cellwidth;
@@ -411,7 +413,7 @@ if (!page && !model) {
 
         });
 
-        canvas1.onclick = function(event){
+        canvas1.onmousedown = function(event){
             var BCR = canvas1.getBoundingClientRect();
             const x = parseInt((event.clientX - BCR.left)/cellwidth); 
             const y = parseInt((h - (event.clientY - BCR.top))/cellheight);
@@ -423,6 +425,11 @@ if (!page && !model) {
                 drawScore();
             } else if (mode == 'select'){
                 selectNote(x, y);
+                canvas1.onmouseup = function(e) {
+                    const curX = parseInt((e.clientX - BCR.left)/cellwidth); 
+                    const curY = parseInt((h - (e.clientY - BCR.top))/cellheight);
+                    dragNote(x, y, curX, curY)
+                }
             } else if (mode == 'text') {
                 if (hasInput) return;
                 var selectedIndex;
@@ -463,7 +470,6 @@ if (!page && !model) {
         }
     
         function selectNote(x, y){
-            var noteIndex
             for (i=0; i<notes.length; i++){
                 if (notes[i][0] == x && notes[i][1] == y){
                     notes[i][3] = true;
@@ -473,18 +479,21 @@ if (!page && !model) {
                 }
             }
 
+            drawScore();
+        }
+
+        function dragNote(x, y, curX, curY){
             if (noteIndex >= 0) {
-                canvas1.onmouseup = function(e) {
-                    var BCR = canvas1.getBoundingClientRect();
-                    var curX = parseInt((e.clientX - BCR.left)/cellwidth); 
-                    var curY = parseInt((h - (e.clientY - BCR.top))/cellheight);
-                    
+
+                if (x != curX || y != curY) {
                     notes[noteIndex][0] = curX
                     notes[noteIndex][1] = curY
+                    notes[noteIndex][3] = false;
 
                     drawScore();
                 }
                 
+                noteIndex = -1
             }
         }
     
