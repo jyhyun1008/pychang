@@ -410,7 +410,7 @@ if (!page && !model) {
                 }
 
                 canvas1.onmouseup = function(e) {
-                    if (mode == 'select'){
+                    if (mode == 'select' && vlinechange == false){
                         const curX = parseInt((e.clientX - BCR.left)/cellwidth); 
                         const curY = parseInt((h - (e.clientY - BCR.top))/cellheight);
                         if (x == curX && y == curY){
