@@ -236,6 +236,8 @@ if (!page && !model) {
         var noteIndex = -1
         var input
 
+        var playAudio, playAnimation
+
         drawPitchGuide();
         drawPianoGrid();
         drawScore();
@@ -255,7 +257,7 @@ if (!page && !model) {
                     var url = e.target.result;
                     drawAudio(url);
                     playControl.src = URL.createObjectURL(file);
-                    var playAudio = new Audio(playControl.src);
+                    playAudio = new Audio(playControl.src);
 
                     playButton.addEventListener('click', function(event){
                         if (playButton.value == '재생') {
@@ -300,21 +302,6 @@ if (!page && !model) {
                         }
                     };
 
-                    canvas1.addEventListener('mousedown', function(event){
-                        if (mode == 'select' && noteIndex == -1){
-                            var BCR = canvas1.getBoundingClientRect();
-                            var x = parseInt((event.clientX - BCR.left)/cellwidth); 
-                            vLinePosition = x*cellwidth;
-                            vLine.setAttribute('style', 'height: 609px; left: '+vLinePosition+'px;');
-                            if (playButton.value == '정지'){
-                                playButton.value = '재생';
-                                playAudio.pause();
-                                cancelAnimationFrame(playAnimation);
-                            }
-                            currentTimeDelay = x/60;
-                            playAudio.currentTime = currentTimeDelay;
-                        }
-                    });
 
                 });
                 reader.readAsDataURL(file);
@@ -392,6 +379,21 @@ if (!page && !model) {
                 addNote(x, y);
                 drawScore();
             } else if (mode == 'select'){
+
+                if (y == 28) {
+                    vLinePosition = x*cellwidth;
+                    vLine.setAttribute('style', 'height: 609px; left: '+vLinePosition+'px;');
+                    if (playButton.value == '정지'){
+                        playButton.value = '재생';
+                        playAudio.pause();
+                        cancelAnimationFrame(playAnimation);
+                    }
+                    var currentTimeDelay = x/60;
+                    if (playAudio){
+                        playAudio.currentTime = currentTimeDelay;
+                    }
+                }
+
                 selectNote(x, y);
 
                 if (hasInput == true){
@@ -400,14 +402,17 @@ if (!page && !model) {
                 }
 
                 canvas1.onmouseup = function(e) {
-                    const curX = parseInt((e.clientX - BCR.left)/cellwidth); 
-                    const curY = parseInt((h - (e.clientY - BCR.top))/cellheight);
-                    if (x == curX && y == curY){
-                        if (hasInput) return;
-                        var selectedIndex;
-                        addInput(x, y);
-                    } else {
-                        dragNote(x, y, curX, curY)
+                    if (mode == 'select'){
+                        const curX = parseInt((e.clientX - BCR.left)/cellwidth); 
+                        const curY = parseInt((h - (e.clientY - BCR.top))/cellheight);
+                        if (x == curX && y == curY){
+                            if (hasInput) return;
+                            var selectedIndex;
+                            addInput(x, y);
+                            drawScore();
+                        } else {
+                            dragNote(x, y, curX, curY);
+                        }
                     }
                 }
             }
