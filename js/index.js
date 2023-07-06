@@ -380,7 +380,15 @@ if (!page && !model) {
                 drawScore();
             } else if (mode == 'select'){
 
-                if (y == 28) {
+                var vlinechange = true
+
+                for (i=0; i<notes.length; i++){
+                    if (notes[i][0] == x && notes[i][1] == y){
+                        vlinechange = false
+                    }
+                }
+
+                if (vlinechange == true) {
                     vLinePosition = x*cellwidth;
                     vLine.setAttribute('style', 'height: 609px; left: '+vLinePosition+'px;');
                     if (playButton.value == '정지'){
