@@ -356,7 +356,7 @@ if (!page && !model) {
                     const padding = 0;
                     var width = 0.5;
                     ctx.lineWidth = 1; // how thick the line is
-                    ctx.strokeStyle = "#70ad47"; // what color our line is
+                    ctx.strokeStyle = "#ffafcc"; // what color our line is
                     ctx.beginPath();
                     ctx.moveTo(0, h/2);
                     for (let i = 0; i < normalizedData.length; i++) {
@@ -450,7 +450,7 @@ if (!page && !model) {
             ctx1.beginPath();
             ctx1.fillStyle = "rgb(40,40,40)";
             if(selected){
-                ctx1.strokeStyle = "rgb(75, 139, 59)";
+                ctx1.strokeStyle = "rgb(141, 148, 219)";
             }else{
                 ctx1.strokeStyle = "rgb(40,40,40)";
             }
@@ -599,11 +599,11 @@ if (!page && !model) {
                 }
                 ctx.beginPath();
                 if((y/cellheight) % 12 == 10 || (y/cellheight) % 12 == 11 || (y/cellheight) % 12 == 1 || (y/cellheight) % 12 == 3 || (y/cellheight) % 12 == 5 || (y/cellheight) % 12 == 6 || (y/cellheight) % 12 == 8 ){
-                    ctx.fillStyle = "rgb(225,225,225)";
+                    ctx.fillStyle = "rgb(239,238,238)";
                 }else{
-                    ctx.fillStyle = "rgb(255,219,88)";
+                    ctx.fillStyle = "rgb(189,224,254)";
                 }
-                ctx.strokeStyle = "rgb(240,240,240)";
+                ctx.strokeStyle = "rgb(248,248,248)";
                 ctx.rect(x, y, cellwidth, cellheight);
                 ctx.fill()
                 ctx.stroke();
