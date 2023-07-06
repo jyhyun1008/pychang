@@ -353,6 +353,7 @@ img {
 
 .filebox {
     line-height: 1.1rem;
+    text-shadow: none !important;
 }
 
 .filebox .midi-name, .filebox .mp3-name {
@@ -368,7 +369,8 @@ img {
 
 .filebox label {
     display: inline-block;
-    padding: 5px 20px 5px 20px;
+    width: 20%;
+    padding: 5px;
     color: #fff;
     vertical-align: middle;
     background-color: var(--yellow);

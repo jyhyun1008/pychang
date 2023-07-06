@@ -184,8 +184,8 @@ if (!page && !model) {
             event.returnValue = '';
         });
 
-        document.querySelector(".page_title").innerHTML = "<div id='modebar'><i class='bx bx-checkbox-checked selected' id='mode-select'></i></i><i class='bx bx-pencil' id='mode-add'></i><i class='bx bx-eraser' id='mode-remove'></i><i class='bx bx-text' id='mode-text'></i></div>";
-        document.querySelector("#post").innerHTML += '<div class="filebox"><input class="mp3-name" value="첨부파일" placeholder="첨부파일"><label for="mp3File">WAVE</label> <input type="file" id="mp3File" accept=".wav"/></div><br><div class="filebox"><input class="midi-name" value="첨부파일" placeholder="첨부파일"><label for="midiFile">MIDI</label> <input type="file" id="midiFile" accept=".mid"/></div><br> <input type="button" value="재생" id="playButton"/> <input type="button" value="저장" id="saveButton"/> <a id="saveLink"></a>';
+        document.querySelector(".page_title").innerHTML = '<div class="filebox"><input class="mp3-name" value="첨부파일" placeholder="첨부파일"><label for="mp3File">WAVE</label> <input type="file" id="mp3File" accept=".wav"/></div><br><div class="filebox"><input class="midi-name" value="첨부파일" placeholder="첨부파일"><label for="midiFile">MIDI</label> <input type="file" id="midiFile" accept=".mid"/></div>';
+        document.querySelector("#post").innerHTML += '<div id="modebar"><i class="bx bx-checkbox-checked selected" id="mode-select"></i></i><i class="bx bx-pencil" id="mode-add"></i> <input type="button" value="재생" id="playButton"/> <div><input type="button" value="저장" id="saveButton"/> <a id="saveLink"></a></div></div>';
 
         $("#file").on('change',function(){
             var fileName = $("#file").val();
@@ -203,33 +203,13 @@ if (!page && !model) {
         document.querySelector("#mode-select").onclick = function(e){
             document.querySelector("#mode-select").classList.add('selected');
             document.querySelector("#mode-add").classList.remove('selected');
-            document.querySelector("#mode-remove").classList.remove('selected');
-            document.querySelector("#mode-text").classList.remove('selected');
             mode = 'select';
         }
 
         document.querySelector("#mode-add").onclick = function(e){
             document.querySelector("#mode-select").classList.remove('selected');
             document.querySelector("#mode-add").classList.add('selected');
-            document.querySelector("#mode-remove").classList.remove('selected');
-            document.querySelector("#mode-text").classList.remove('selected');
             mode = 'add';
-        }
-
-        document.querySelector("#mode-remove").onclick = function(e){
-            document.querySelector("#mode-select").classList.remove('selected');
-            document.querySelector("#mode-add").classList.remove('selected');
-            document.querySelector("#mode-remove").classList.add('selected');
-            document.querySelector("#mode-text").classList.remove('selected');
-            mode = 'remove';
-        }
-
-        document.querySelector("#mode-text").onclick = function(e){
-            document.querySelector("#mode-select").classList.remove('selected');
-            document.querySelector("#mode-add").classList.remove('selected');
-            document.querySelector("#mode-remove").classList.remove('selected');
-            document.querySelector("#mode-text").classList.add('selected');
-            mode = 'text';
         }
 
         var canvas = document.getElementById('waveviewer');
@@ -254,6 +234,7 @@ if (!page && !model) {
         var fileName;
 
         var noteIndex = -1
+        var input
 
         drawPitchGuide();
         drawPianoGrid();
@@ -311,27 +292,11 @@ if (!page && !model) {
                         } else if (keyCode === 49) {
                             document.querySelector("#mode-select").classList.add('selected');
                             document.querySelector("#mode-add").classList.remove('selected');
-                            document.querySelector("#mode-remove").classList.remove('selected');
-                            document.querySelector("#mode-text").classList.remove('selected');
                             mode = 'select';
                         } else if (keyCode === 50) {
                             document.querySelector("#mode-select").classList.remove('selected');
                             document.querySelector("#mode-add").classList.add('selected');
-                            document.querySelector("#mode-remove").classList.remove('selected');
-                            document.querySelector("#mode-text").classList.remove('selected');
                             mode = 'add';
-                        } else if (keyCode === 51) {
-                            document.querySelector("#mode-select").classList.remove('selected');
-                            document.querySelector("#mode-add").classList.remove('selected');
-                            document.querySelector("#mode-remove").classList.add('selected');
-                            document.querySelector("#mode-text").classList.remove('selected');
-                            mode = 'remove';
-                        } else if (keyCode === 52) {
-                            document.querySelector("#mode-select").classList.remove('selected');
-                            document.querySelector("#mode-add").classList.remove('selected');
-                            document.querySelector("#mode-remove").classList.remove('selected');
-                            document.querySelector("#mode-text").classList.add('selected');
-                            mode = 'text';
                         }
                     };
 
@@ -426,27 +391,25 @@ if (!page && !model) {
             if (mode == 'add'){
                 addNote(x, y);
                 drawScore();
-            } else if (mode == 'remove'){
-                removeNote(x, y);
-                drawScore();
             } else if (mode == 'select'){
                 selectNote(x, y);
+
+                if (hasInput == true){
+                    document.body.removeChild(input);
+                    hasInput = false;
+                }
+
                 canvas1.onmouseup = function(e) {
                     const curX = parseInt((e.clientX - BCR.left)/cellwidth); 
                     const curY = parseInt((h - (e.clientY - BCR.top))/cellheight);
-                    dragNote(x, y, curX, curY)
+                    if (x == curX && y == curY){
+                        if (hasInput) return;
+                        var selectedIndex;
+                        addInput(x, y);
+                    } else {
+                        dragNote(x, y, curX, curY)
+                    }
                 }
-            }
-        }
-
-        canvas1.onclick = function(event){
-            var BCR = canvas1.getBoundingClientRect();
-            const x = parseInt((event.clientX - BCR.left)/cellwidth); 
-            const y = parseInt((h - (event.clientY - BCR.top))/cellheight);
-            if (mode == 'text') {
-                if (hasInput) return;
-                var selectedIndex;
-                addInput(x, y);
             }
         }
 
@@ -455,6 +418,9 @@ if (!page && !model) {
             for (i=0; i<notes.length; i++){
                 if (notes[i][0] == x){
                     CanAddNote = false
+                    if (notes[i][1] == y){
+                        notes.splice(i, 1);
+                    }
                 }
             }
             if (CanAddNote == true){
@@ -538,8 +504,7 @@ if (!page && !model) {
                     var BCR = canvas1.getBoundingClientRect();
                     
                     selectedIndex = i;
-                    var input = document.createElement('input');
-                
+                    input = document.createElement('input');
                     input.type = 'text';
                     input.style.position = 'fixed';
                     input.style.zIndex = 2;
