@@ -264,7 +264,7 @@ if (!page && !model) {
                             playButton.value = '정지';
                             playAudio.play();
                             (function repeatOften() {
-                                vLinePosition += 10;
+                                vLinePosition += 5;
                                 vLine.setAttribute('style', 'height: 609px; left: '+vLinePosition+'px;');
                                 playAnimation = requestAnimationFrame(repeatOften);
                             })();
@@ -282,7 +282,7 @@ if (!page && !model) {
                                 playButton.value = '정지';
                                 playAudio.play();
                                 (function repeatOften() {
-                                    vLinePosition += 10;
+                                    vLinePosition += 5;
                                     vLine.setAttribute('style', 'height: 609px; left: '+vLinePosition+'px;');
                                     playAnimation = requestAnimationFrame(repeatOften);
                                 })();
