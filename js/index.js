@@ -329,7 +329,7 @@ if (!page && !model) {
                 const filterData = (audioBuffer) => {
                     const rawData = audioBuffer.getChannelData(0); // We only need to work with one channel of data
                     const samples = 18000; // Number of samples we want to have in our final data set
-                    const blockSize = (audioBuffer.sampleRate / 1200); // the number of samples in each subdivision
+                    const blockSize = (audioBuffer.sampleRate * 2 / 1200); // the number of samples in each subdivision
                     const filteredData = [];
                     for (let i = 0; i < parseInt(samples); i++) {
                         value = rawData[Math.floor(blockSize * i)]
